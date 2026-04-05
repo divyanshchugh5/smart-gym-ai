@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Gym AI - Professional Fitness Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            color: #2d3748;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            background: linear-gradient(45deg, #ffffff, #e2e8f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .sidebar {
+            background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+            padding: 40px 30px;
+            border-right: 2px solid #e2e8f0;
+            position: relative;
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+        }
+
+        .sidebar h3 {
+            margin-bottom: 25px;
+            color: #1a202c;
+            font-weight: 700;
+            font-size: 1.3rem;
+            letter-spacing: -0.01em;
+        }
+
+        .exercise-selector {
+            margin-bottom: 35px;
+        }
+
+        .exercise-selector label {
+            display: block;
+            font-weight: 600;
+            color: #4a5568;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+
+        .exercise-selector select {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: white;
+            color: #2d3748;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .exercise-selector select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .exercise-selector select:hover {
+            border-color: #cbd5e0;
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 18px 24px;
+            border: none;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            color: white;
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-danger:active {
+            transform: translateY(-1px);
+        }
+
+        .voice-toggle {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+        }
+
+        .voice-toggle label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #2d3748;
+            transition: color 0.3s;
+        }
+
+        .voice-toggle label:hover {
+            color: #667eea;
+        }
+
+        .voice-toggle input[type="checkbox"] {
+            width: 24px;
+            height: 24px;
+            accent-color: #667eea;
+            cursor: pointer;
+        }
+
+        #voiceInfo {
+            font-size: 0.85rem;
+            color: #718096;
+            line-height: 1.6;
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        #voiceInfo strong {
+            color: #2d3748;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .stats {
+            margin-top: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 24px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            border: 1px solid #f1f5f9;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, #667eea, #764ba2);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+
+        .stat-icon.reps {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .stat-icon.stage {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+            color: white;
+            box-shadow: 0 8px 20px rgba(78, 205, 196, 0.3);
+        }
+
+        .stat-icon.time {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            color: #2d3748;
+            box-shadow: 0 8px 20px rgba(250, 177, 160, 0.3);
+        }
+
+        .stat-info h4 {
+            font-size: 0.9rem;
+            color: #718096;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .stat-info .value {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #1a202c;
+            line-height: 1;
+        }
+
+        .progress-container {
+            margin-top: 25px;
+            background: white;
+            padding: 24px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            border: 1px solid #f1f5f9;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #edf2f7;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+            width: 0%;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, rgba(255,255,255,0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-container p {
+            text-align: center;
+            margin-top: 15px;
+            color: #718096;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .camera-section {
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+        }
+
+        .camera-container {
+            position: relative;
+            width: 100%;
+            max-width: 720px;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        #camera {
+            width: 100%;
+            display: block;
+            border-radius: 22px;
+        }
+
+        #overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            border-radius: 22px;
+        }
+
+        .workout-summary {
+            display: none;
+            text-align: center;
+            padding: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 24px;
+            margin-top: 30px;
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .workout-summary::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        .workout-summary h2 {
+            margin-bottom: 25px;
+            font-size: 2.5rem;
+            font-weight: 800;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .summary-stats {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-bottom: 35px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .summary-stat {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 25px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .summary-stat .number {
+            font-size: 4rem;
+            font-weight: 900;
+            display: block;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
+        .summary-stat .label {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .celebration {
+            font-size: 5rem;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            animation: bounce 1s ease-in-out;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 320px 1fr;
+                gap: 30px;
+            }
+
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .camera-section {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .sidebar {
+                border-right: none;
+                border-bottom: 2px solid #e2e8f0;
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 2.2rem;
+            }
+
+            .header p {
+                font-size: 1.1rem;
+            }
+
+            .camera-section {
+                padding: 25px 20px;
+            }
+
+            .summary-stats {
+                flex-direction: column;
+                gap: 25px;
+            }
+
+            .summary-stat .number {
+                font-size: 3rem;
+            }
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .loading-content {
+            text-align: center;
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .status-message {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+            font-weight: 600;
+            font-size: 0.9rem;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .status-message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        .exercise-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 20px;
+            margin: 10px 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .exercise-card:hover {
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.08));
+        }
+
+        .status-message.success {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            box-shadow: 0 8px 25px rgba(78, 205, 196, 0.3);
+        }
+
+        .status-message.error {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-dumbbell"></i> Smart Gym AI</h1>
+            <p>Professional AI-Powered Fitness Tracker</p>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <h3>Initializing Camera & AI</h3>
+                <p>Please allow camera access when prompted</p>
+            </div>
+        </div>
+
+        <!-- Status Message -->
+        <div class="status-message" id="statusMessage"></div>
+
+        <div class="main-content">
+            <aside class="sidebar">
+                <header>
+                    <h3><i class="fas fa-dumbbell"></i> Exercise Control</h3>
+                </header>
+
+                <section class="exercise-selector">
+                    <label for="exerciseSelect">Choose Your Exercise</label>
+                    <select id="exerciseSelect" aria-label="Select exercise type">
+                        <option value="bicep-curl">💪 Bicep Curl</option>
+                        <option value="squat">🏃 Squat</option>
+                        <option value="push-up">🤸 Push-up</option>
+                        <option value="shoulder-press">🏋️ Shoulder Press</option>
+                        <option value="lunge">🦵 Lunge</option>
+                        <option value="plank">🧘 Plank</option>
+                    </select>
+                </section>
+
+                <section class="controls">
+                    <button id="startBtn" class="btn btn-primary" aria-label="Start workout">
+                        <i class="fas fa-play"></i> Start Workout
+                    </button>
+                    <button id="stopBtn" class="btn btn-danger" aria-label="Stop workout" disabled>
+                        <i class="fas fa-stop"></i> Stop Workout
+                    </button>
+
+                    <div class="voice-toggle">
+                        <label for="voiceToggle">
+                            <input type="checkbox" id="voiceToggle" aria-label="Enable voice commands">
+                            <span><i class="fas fa-microphone"></i> Voice Commands</span>
+                        </label>
+                        <div id="voiceInfo">
+                            <strong>🎙️ Voice Commands:</strong><br>
+                            • "Start workout" / "Stop workout"<br>
+                            • "Change to [exercise]"<br>
+                            • "How many reps?"<br>
+                            • "What stage?" / "Time?"
+                        </div>
+                    </div>
+                </section>
+
+                <section class="stats">
+                    <div class="stat-card">
+                        <div class="stat-icon reps">
+                            <i class="fas fa-repeat"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>Reps</h4>
+                            <div class="value" id="repCount" aria-label="Current rep count">0</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon stage">
+                            <i class="fas fa-running"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>Stage</h4>
+                            <div class="value" id="stageDisplay" aria-label="Current exercise stage">Idle</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon time">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4>Time</h4>
+                            <div class="value" id="timeDisplay" aria-label="Workout duration">00:00</div>
+                        </div>
+                    </div>
+
+                    <div class="progress-container">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="10">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <p>Progress to 10 reps goal</p>
+                    </div>
+                </section>
+            </aside>
+
+            <main class="camera-section">
+                <div class="camera-container">
+                    <video id="camera" autoplay playsinline muted aria-label="Camera feed for pose detection"></video>
+                    <canvas id="overlay" aria-label="Pose detection overlay"></canvas>
+                </div>
+
+                <div class="workout-summary" id="workoutSummary" role="dialog" aria-labelledby="summaryTitle">
+                    <div class="celebration" aria-hidden="true">🎉</div>
+                    <h2 id="summaryTitle">Workout Completed!</h2>
+                    <div class="summary-stats">
+                        <div class="summary-stat">
+                            <span class="number" id="finalReps" aria-label="Total reps completed">0</span>
+                            <div class="label">Total Reps</div>
+                        </div>
+                        <div class="summary-stat">
+                            <span class="number" id="finalTime" aria-label="Total workout time">00:00</span>
+                            <div class="label">Total Time</div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
+
+    <script>
+        const videoElement = document.getElementById('camera');
+        const canvasElement = document.getElementById('overlay');
+        const canvasCtx = canvasElement.getContext('2d');
+
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const exerciseSelect = document.getElementById('exerciseSelect');
+        const repCount = document.getElementById('repCount');
+        const stageDisplay = document.getElementById('stageDisplay');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const progressFill = document.getElementById('progressFill');
+        const workoutSummary = document.getElementById('workoutSummary');
+        const finalReps = document.getElementById('finalReps');
+        const finalTime = document.getElementById('finalTime');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const statusMessage = document.getElementById('statusMessage');
+
+        // Status message function
+        function showStatus(message, type = 'info') {
+            statusMessage.textContent = message;
+            statusMessage.className = `status-message show ${type}`;
+            setTimeout(() => {
+                statusMessage.classList.remove('show');
+            }, 3000);
+        }
+
+        let isRunning = false;
+        let counter = 0;
+        let stage = null;
+        let startTime = null;
+        let pose = null;
+        let camera = null;
+        let speechSynthesis = null;
+        let speechRecognition = null;
+        let voiceEnabled = false;
+
+        // Initialize speech synthesis
+        if ('speechSynthesis' in window) {
+            speechSynthesis = window.speechSynthesis;
+        }
+
+        // Initialize speech recognition
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            speechRecognition = new SpeechRecognition();
+            speechRecognition.continuous = true;
+            speechRecognition.interimResults = false;
+            speechRecognition.lang = 'en-US';
+
+            speechRecognition.onresult = (event) => {
+                if (!voiceEnabled) return;
+
+                const command = event.results[event.results.length - 1][0].transcript.toLowerCase().trim();
+                console.log('Voice command:', command);
+                processVoiceCommand(command);
+            };
+
+            speechRecognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+            };
+
+            speechRecognition.onend = () => {
+                if (voiceEnabled && isRunning) {
+                    speechRecognition.start();
+                }
+            };
+        }
+
+        // Voice feedback function
+        function speak(text) {
+            if (!voiceEnabled || !speechSynthesis) return;
+
+            // Cancel any ongoing speech
+            speechSynthesis.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 1.0;
+            utterance.pitch = 1.0;
+            utterance.volume = 0.8;
+
+            speechSynthesis.speak(utterance);
+        }
+
+        // Process voice commands
+        function processVoiceCommand(command) {
+            if (command.includes('start') && command.includes('workout')) {
+                if (!isRunning) {
+                    startBtn.click();
+                    speak('Starting workout');
+                }
+            } else if (command.includes('stop') && command.includes('workout')) {
+                if (isRunning) {
+                    stopBtn.click();
+                    speak('Stopping workout');
+                }
+            } else if (command.includes('change to') || command.includes('switch to')) {
+                const exercises = ['bicep curl', 'squat', 'push-up', 'pushup', 'shoulder press', 'lunge', 'plank'];
+                for (let exercise of exercises) {
+                    if (command.includes(exercise)) {
+                        const value = exercise.replace(' ', '-').replace('pushup', 'push-up');
+                        exerciseSelect.value = value;
+                        speak(`Changed to ${exercise}`);
+                        break;
+                    }
+                }
+            } else if (command.includes('how many') || command.includes('rep count')) {
+                speak(`You have completed ${counter} reps`);
+            } else if (command.includes('what stage') || command.includes('current stage')) {
+                speak(`Current stage is ${stage || 'idle'}`);
+            } else if (command.includes('time') || command.includes('how long')) {
+                if (startTime) {
+                    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                    const minutes = Math.floor(elapsed / 60);
+                    const seconds = elapsed % 60;
+                    speak(`Workout time is ${minutes} minutes and ${seconds} seconds`);
+                }
+            }
+        }
+
+        // Exercise configurations
+        const exercises = {
+            'bicep-curl': {
+                landmarks: ['LEFT_SHOULDER', 'LEFT_ELBOW', 'LEFT_WRIST'],
+                upThreshold: 160,
+                downThreshold: 40,
+                stageUp: 'DOWN',
+                stageDown: 'UP'
+            },
+            'squat': {
+                landmarks: ['LEFT_HIP', 'LEFT_KNEE', 'LEFT_ANKLE'],
+                upThreshold: 160,
+                downThreshold: 90,
+                stageUp: 'UP',
+                stageDown: 'DOWN'
+            },
+            'push-up': {
+                landmarks: ['LEFT_SHOULDER', 'LEFT_ELBOW', 'LEFT_WRIST'],
+                upThreshold: 160,
+                downThreshold: 90,
+                stageUp: 'UP',
+                stageDown: 'DOWN'
+            },
+            'shoulder-press': {
+                landmarks: ['LEFT_SHOULDER', 'LEFT_ELBOW', 'LEFT_WRIST'],
+                upThreshold: 160,
+                downThreshold: 40,
+                stageUp: 'DOWN',
+                stageDown: 'UP'
+            },
+            'lunge': {
+                landmarks: ['LEFT_HIP', 'LEFT_KNEE', 'LEFT_ANKLE'],
+                upThreshold: 160,
+                downThreshold: 90,
+                stageUp: 'UP',
+                stageDown: 'DOWN'
+            },
+            'plank': {
+                landmarks: ['LEFT_SHOULDER', 'LEFT_HIP', 'LEFT_ANKLE'],
+                upThreshold: 180,
+                downThreshold: 150,
+                stageUp: 'HOLD',
+                stageDown: 'REST'
+            }
+        };
+
+        function calculateAngle(a, b, c) {
+            const radians = Math.atan2(c.y - b.y, c.x - b.x) - Math.atan2(a.y - b.y, a.x - b.x);
+            let angle = Math.abs(radians * 180.0 / Math.PI);
+            if (angle > 180) angle = 360 - angle;
+            return angle;
+        }
+
+        function onResults(results) {
+            if (!isRunning) return;
+
+            canvasCtx.save();
+            canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+            canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
+
+            if (results.poseLandmarks) {
+                const config = exercises[exerciseSelect.value];
+                const landmarks = results.poseLandmarks;
+
+                const lm1 = landmarks[POSE_LANDMARKS[config.landmarks[0]]];
+                const lm2 = landmarks[POSE_LANDMARKS[config.landmarks[1]]];
+                const lm3 = landmarks[POSE_LANDMARKS[config.landmarks[2]]];
+
+                if (lm1 && lm2 && lm3) {
+                    const angle = calculateAngle(lm1, lm2, lm3);
+                    const prevStage = stage;
+
+                    if (angle > config.upThreshold) {
+                        stage = config.stageUp;
+                    }
+
+                    if (angle < config.downThreshold && stage === config.stageUp) {
+                        stage = config.stageDown;
+                        counter++;
+
+                        // Voice feedback for rep completion
+                        if (voiceEnabled) {
+                            speak(`Rep ${counter}`);
+                        }
+                    }
+
+                    // Voice feedback for stage changes
+                    if (voiceEnabled && prevStage !== stage && stage) {
+                        if (stage === 'UP' || stage === 'DOWN') {
+                            speak(stage.toLowerCase());
+                        }
+                    }
+                }
+
+                // Draw pose landmarks
+                drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS, {
+                    color: '#00FF00',
+                    lineWidth: 4
+                });
+                drawLandmarks(canvasCtx, results.poseLandmarks, {
+                    color: '#FF0000',
+                    lineWidth: 2
+                });
+            }
+
+            canvasCtx.restore();
+
+            // Update UI
+            repCount.textContent = counter;
+            stageDisplay.textContent = stage || 'Idle';
+
+            if (startTime) {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                const minutes = Math.floor(elapsed / 60);
+                const seconds = elapsed % 60;
+                timeDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+
+            const progress = Math.min(counter / 10, 1) * 100;
+            progressFill.style.width = `${progress}%`;
+        }
+
+        async function initCamera() {
+            try {
+                camera = new Camera(videoElement, {
+                    onFrame: async () => {
+                        if (pose && isRunning) {
+                            await pose.send({image: videoElement});
+                        }
+                    },
+                    width: 640,
+                    height: 480
+                });
+                await camera.start();
+                console.log('Camera started successfully');
+            } catch (error) {
+                console.error('Error starting camera:', error);
+                alert('Error accessing camera. Please make sure you have granted camera permissions and try again.');
+                isRunning = false;
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+            }
+        }
+
+        function initPose() {
+            pose = new Pose({
+                locateFile: (file) => {
+                    return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
+                }
+            });
+
+            pose.setOptions({
+                modelComplexity: 1,
+                smoothLandmarks: true,
+                enableSegmentation: false,
+                smoothSegmentation: false,
+                minDetectionConfidence: 0.5,
+                minTrackingConfidence: 0.5
+            });
+
+            pose.onResults(onResults);
+        }
+
+        startBtn.addEventListener('click', async () => {
+            if (!isRunning) {
+                loadingOverlay.style.display = 'flex';
+                startBtn.textContent = 'Initializing...';
+                startBtn.disabled = true;
+
+                try {
+                    // Initialize pose detection if not already done
+                    if (!pose) {
+                        initPose();
+                    }
+
+                    // Initialize camera
+                    await initCamera();
+
+                    // Start workout
+                    isRunning = true;
+                    counter = 0;
+                    stage = null;
+                    startTime = Date.now();
+                    workoutSummary.style.display = 'none';
+                    startBtn.textContent = '▶ Start Workout';
+                    startBtn.disabled = true;
+                    stopBtn.disabled = false;
+                    loadingOverlay.style.display = 'none';
+
+                    showStatus('🎯 Workout started! Begin exercising.', 'success');
+
+                    // Start voice recognition if enabled
+                    if (voiceEnabled && speechRecognition) {
+                        try {
+                            speechRecognition.start();
+                            speak('Workout started. Say commands like start workout, stop workout, or change to squats.');
+                        } catch (error) {
+                            console.error('Error starting speech recognition:', error);
+                        }
+                    } else if (voiceEnabled) {
+                        speak('Workout started');
+                    }
+                } catch (error) {
+                    console.error('Error initializing workout:', error);
+                    loadingOverlay.style.display = 'none';
+                    startBtn.textContent = '▶ Start Workout';
+                    startBtn.disabled = false;
+                    showStatus('❌ Failed to start workout. Check camera permissions.', 'error');
+                    alert('Failed to start workout. Please check camera permissions.');
+                }
+            }
+        });
+
+        stopBtn.addEventListener('click', () => {
+            if (isRunning) {
+                isRunning = false;
+                if (camera) {
+                    camera.stop();
+                }
+                if (speechRecognition) {
+                    speechRecognition.stop();
+                }
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                const minutes = Math.floor(elapsed / 60);
+                const seconds = elapsed % 60;
+                finalReps.textContent = counter;
+                finalTime.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                workoutSummary.style.display = 'block';
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+
+                showStatus('🎉 Workout completed! Great job!', 'success');
+
+                if (voiceEnabled) {
+                    speak(`Workout completed. You did ${counter} reps in ${minutes} minutes and ${seconds} seconds.`);
+                }
+            }
+        });
+
+        // Voice toggle functionality
+        const voiceToggle = document.getElementById('voiceToggle');
+        const voiceInfo = document.getElementById('voiceInfo');
+        voiceToggle.addEventListener('change', () => {
+            voiceEnabled = voiceToggle.checked;
+            voiceInfo.style.display = voiceEnabled ? 'block' : 'none';
+            if (voiceEnabled) {
+                speak('Voice commands enabled');
+            } else {
+                if (speechRecognition) {
+                    speechRecognition.stop();
+                }
+                speak('Voice commands disabled');
+            }
+        });
+
+        // Check browser compatibility
+        const voiceSupported = 'speechSynthesis' in window && ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window);
+        if (!voiceSupported) {
+            document.querySelector('.voice-toggle').style.display = 'none';
+            console.warn('Voice commands not supported in this browser');
+        }
+    </script>
+</body>
+</html>
